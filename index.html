@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Bra Size Calculator (UK sizing)</title>
+	<meta name="description"
+		content="Single‑page bra size calculator using the 6‑measurement method with UK cup sizes. Deployable on GitHub Pages as index.html." />
+	<style>
+		:root {
+			--bg: #0b0c10;
+			--card: #111318;
+			--muted: #9aa3b2;
+			--text: #e6e9ef;
+			--accent: #7aa2f7;
+			--accent-2: #a3be8c;
+			--danger: #ff8080;
+			--ring: #1f2937;
+			--radius: 16px;
+		}
+
+		* {
+			box-sizing: border-box
+		}
+
+		html,
+		body {
+			height: 100%
+		}
+
+		body {
+			margin: 0;
+			font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+			background: radial-gradient(1200px 600px at 10% -10%, #0f172a 0%, var(--bg) 55%),
+				radial-gradient(1000px 400px at 120% 0%, #0a0f1f 0%, transparent 60%);
+			color: var(--text);
+			line-height: 1.4;
+		}
+
+		header {
+			max-width: 980px;
+			margin: 32px auto 16px;
+			padding: 0 16px
+		}
+
+		header h1 {
+			margin: 0 0 8px;
+			font-weight: 800;
+			letter-spacing: 0.2px
+		}
+
+		header p {
+			margin: 0;
+			color: var(--muted)
+		}
+
+		.container {
+			max-width: 980px;
+			margin: 0 auto 48px;
+			padding: 0 16px;
+		}
+
+		.grid {
+			display: grid;
+			grid-template-columns: 1.1fr 1fr;
+			gap: 20px
+		}
+
+		@media (max-width: 900px) {
+			.grid {
+				grid-template-columns: 1fr
+			}
+		}
+
+		.card {
+			background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+			border: 1px solid #222834;
+			border-radius: var(--radius);
+			box-shadow: 0 15px 40px rgba(0, 0, 0, .35);
+		}
+
+		.card h2 {
+			margin: 0;
+			padding: 18px 18px 8px;
+			font-size: 18px
+		}
+
+		.card .sub {
+			color: var(--muted);
+			font-size: 13px;
+			padding: 0 18px 10px
+		}
+
+		.card .body {
+			padding: 16px 18px 20px
+		}
+
+		.row {
+			display: grid;
+			grid-template-columns: 1fr 140px;
+			gap: 12px;
+			align-items: end;
+			margin-bottom: 12px
+		}
+
+		.row>div {
+			display: flex;
+			flex-direction: column
+		}
+
+		label {
+			font-size: 13px;
+			color: var(--muted);
+			margin-bottom: 6px
+		}
+
+		input[type="number"] {
+			width: 100%;
+			padding: 12px 12px;
+			background: #0e1117;
+			color: var(--text);
+			border: 1px solid #2a3141;
+			border-radius: 12px;
+			outline: none
+		}
+
+		input[type="number"]:focus {
+			border-color: #3b82f6;
+			box-shadow: 0 0 0 3px rgba(59, 130, 246, .25)
+		}
+
+		.units {
+			display: flex;
+			gap: 8px
+		}
+
+		.seg {
+			display: flex;
+			background: #0e1117;
+			border: 1px solid #2a3141;
+			border-radius: 12px;
+			padding: 4px
+		}
+
+		.seg button {
+			flex: 1;
+			padding: 8px 10px;
+			border-radius: 8px;
+			border: 0;
+			background: transparent;
+			color: var(--muted);
+			cursor: pointer
+		}
+
+		.seg button.active {
+			background: #1f2937;
+			color: var(--text)
+		}
+
+		.radio-group {
+			display: flex;
+			gap: 10px;
+			flex-wrap: wrap
+		}
+
+		.radio {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 8px 10px;
+			border: 1px solid #2a3141;
+			border-radius: 12px;
+			cursor: pointer;
+			background: #0e1117
+		}
+
+		.radio input {
+			accent-color: #3b82f6
+		}
+
+		.tips {
+			font-size: 12px;
+			color: var(--muted);
+			margin-top: 2px
+		}
+
+		.btns {
+			display: flex;
+			gap: 10px;
+			flex-wrap: wrap;
+			margin-top: 8px
+		}
+
+		button.primary {
+			background: linear-gradient(135deg, var(--accent), #5aa0ff);
+			color: #0b1020;
+			font-weight: 700
+		}
+
+		button.ghost {
+			background: transparent;
+			color: var(--text);
+			border: 1px solid #2a3141
+		}
+
+		button {
+			padding: 12px 16px;
+			border-radius: 12px;
+			border: 0;
+			cursor: pointer
+		}
+
+		.result {
+			display: flex;
+			flex-direction: column;
+			gap: 12px
+		}
+
+		.badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			border: 1px dashed #2a3141;
+			background: #0e1117;
+			padding: 10px 12px;
+			border-radius: 12px;
+			font-size: 14px
+		}
+
+		.badge strong {
+			font-size: 16px
+		}
+
+		.final {
+			font-size: 28px;
+			letter-spacing: 1px;
+			font-weight: 800;
+		}
+
+		.final span {
+			background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent
+		}
+
+		.muted {
+			color: var(--muted)
+		}
+
+		.warn {
+			color: var(--danger)
+		}
+
+		.help {
+			font-size: 13px;
+			color: var(--muted)
+		}
+
+		.hr {
+			height: 1px;
+			background: #222834;
+			margin: 8px 0 12px
+		}
+
+		details {
+			border: 1px solid #222834;
+			border-radius: 12px;
+			padding: 10px 14px;
+			background: #0c1016
+		}
+
+		summary {
+			cursor: pointer;
+			color: var(--muted)
+		}
+
+		code {
+			background: #0e1117;
+			border: 1px solid #2a3141;
+			padding: 2px 6px;
+			border-radius: 6px
+		}
+
+		footer {
+			max-width: 980px;
+			margin: 24px auto 64px;
+			color: var(--muted);
+			padding: 0 16px
+		}
+
+		a {
+			color: #cbd5ff
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<h1>Bra Size Calculator <span class="muted">(UK sizing)</span></h1>
+		<p>Implements the 6‑measurement method with AFAB/AMAB logic. All math follows the rules you provided. Results
+			are a starting point—try nearby sizes for best fit.</p>
+	</header>
+
+	<div class="container grid">
+		<section class="card">
+			<h2>1) Enter your measurements</h2>
+			<div class="sub">Measure with no bra. Keep the tape level. If you measured in cm, choose “cm” and we’ll
+				convert internally.</div>
+			<div class="body">
+				<div class="units" aria-label="units">
+					<div class="seg" role="tablist" aria-label="Units">
+						<button id="u-in" class="active" role="tab" aria-selected="true">inches</button>
+						<button id="u-cm" role="tab" aria-selected="false">cm</button>
+					</div>
+				</div>
+
+				<div class="hr"></div>
+
+				<div class="radio-group" aria-label="sex assigned at birth">
+					<label class="radio"><input type="radio" name="sab" value="afab" checked> <strong>Assigned
+							female at birth (AFAB)</strong></label>
+					<label class="radio"><input type="radio" name="sab" value="amab"> <strong>Assigned male at
+							birth (AMAB)</strong></label>
+				</div>
+
+				<div class="hr"></div>
+
+				<div class="row">
+					<div>
+						<label for="m1">Step 1. Loose underbust</label>
+						<input id="m1" type="number" min="0" step="0.01" placeholder="e.g. 31.25"
+							inputmode="decimal" />
+						<div class="tips">Tape is <em>loose snug</em> under the bust, parallel to floor.</div>
+					</div>
+					<div></div>
+				</div>
+
+				<div class="row">
+					<div>
+						<label for="m2">Step 2. Snug underbust</label>
+						<input id="m2" type="number" min="0" step="0.01" placeholder="e.g. 31.25"
+							inputmode="decimal" />
+						<div class="tips">Comfortably snug; how you want a band to feel.</div>
+					</div>
+					<div></div>
+				</div>
+
+				<div class="row">
+					<div>
+						<label for="m3">Step 3. Tight underbust</label>
+						<input id="m3" type="number" min="0" step="0.01" placeholder="e.g. 29.75"
+							inputmode="decimal" />
+						<div class="tips">Pulled tight on full exhale.</div>
+					</div>
+					<div></div>
+				</div>
+
+				<div class="row">
+					<div>
+						<label for="m4">Step 4. Standing bust</label>
+						<input id="m4" type="number" min="0" step="0.01" placeholder="e.g. 35.00"
+							inputmode="decimal" />
+					</div>
+					<div></div>
+				</div>
+
+				<div class="row">
+					<div>
+						<label for="m5">Step 5. Leaning bust</label>
+						<input id="m5" type="number" min="0" step="0.01" placeholder="e.g. 36.75"
+							inputmode="decimal" />
+					</div>
+					<div></div>
+				</div>
+
+				<div class="row">
+					<div>
+						<label for="m6">Step 6. Lying bust</label>
+						<input id="m6" type="number" min="0" step="0.01" placeholder="e.g. 34.75"
+							inputmode="decimal" />
+					</div>
+					<div></div>
+				</div>
+
+				<div class="btns">
+					<button class="primary" id="calcBtn">Calculate</button>
+					<button class="ghost" id="resetBtn">Reset</button>
+				</div>
+
+				<p class="help">We keep everything on your device — no network calls or tracking.</p>
+			</div>
+		</section>
+
+		<section class="card">
+			<h2>2) Result</h2>
+			<div class="sub">We show the initial cup result (Step 8) and the final size (Step 9).</div>
+			<div class="body result" id="result">
+				<div class="badge">Fill the form and hit <strong>Calculate</strong>.</div>
+				<details>
+					<summary>How this is calculated</summary>
+					<ul class="help">
+						<li><strong>Band</strong> = snug underbust rounded to nearest <em>even</em> whole number.
+						</li>
+						<li><strong>AFAB cup base</strong>: if (leaning - standing) &gt; 2.5", average (standing +
+							leaning + lying)/3; else use leaning.</li>
+						<li><strong>AMAB cup base</strong>: weighted average = (standing + leaning + lying +
+							standing + lying)/5.</li>
+						<li>Subtract <em>loose underbust</em> from the chosen bust measurement, then map the
+							difference to UK cups (\&lt;1=AA, 1=A, 2=B, ..., 20=MM). Fractions map between sizes
+							(e.g., 5.5 → DD/E).</li>
+						<li><strong>Final cup</strong>: find x = round(|loose - band|) / 2. If loose &lt; band →
+							decrease by x; if loose &gt; band → increase by x. Half‑steps become between sizes
+							(e.g., FF → FF/G).</li>
+					</ul>
+				</details>
+			</div>
+		</section>
+	</div>
+
+	<div class="container">
+		<section class="card">
+			<h2>Band fit notes</h2>
+			<div class="body">
+				<ul class="help">
+					<li>Smaller bands (\u226432) often <em>size up</em> for comfort; larger bands (\u226536) often
+						<em>size down</em> as they stretch more.</li>
+					<li>If (snug - tight) &lt; 2", consider sizing <em>up</em> a band. If (snug - tight) \u2265 4",
+						consider sizing <em>down</em> a band.</li>
+					<li>New bras should fit on the loosest hook so you can tighten as they age.</li>
+				</ul>
+			</div>
+		</section>
+	</div>
+
+	<footer>
+		<p>Made for GitHub Pages. Save this file as <code>index.html</code> in a public repo and enable Pages. UK cups
+			used by design; convert if buying from brands with US sizing variations.</p>
+	</footer>
+
+	<script>
+		(function () {
+			const cupOrder = ["AA", "A", "B", "C", "D", "DD", "E", "F", "FF", "G", "GG", "H", "HH", "J", "JJ", "K", "KK", "L", "LL", "M", "MM"]; // 0..20 per chart
+
+			const els = {
+				m1: document.getElementById('m1'),
+				m2: document.getElementById('m2'),
+				m3: document.getElementById('m3'),
+				m4: document.getElementById('m4'),
+				m5: document.getElementById('m5'),
+				m6: document.getElementById('m6'),
+				calcBtn: document.getElementById('calcBtn'),
+				resetBtn: document.getElementById('resetBtn'),
+				result: document.getElementById('result'),
+				uIn: document.getElementById('u-in'),
+				uCm: document.getElementById('u-cm')
+			};
+
+			// Units handling
+			let unit = 'in';
+			const setUnit = (u) => {
+				unit = u;
+				els.uIn.classList.toggle('active', unit === 'in');
+				els.uCm.classList.toggle('active', unit === 'cm');
+			};
+			els.uIn.addEventListener('click', () => setUnit('in'));
+			els.uCm.addEventListener('click', () => setUnit('cm'));
+
+			function toInches(v) { return unit === 'cm' ? (v / 2.54) : v; }
+
+			function val(el) { const x = parseFloat(el.value); return isFinite(x) ? x : NaN; }
+			function roundNearestEven(n) { return Math.round(n / 2) * 2; }
+
+			function diffToCupLabel(d) {
+				if (!isFinite(d)) return null;
+				if (d < 1) return 'AA';
+				if (d >= 20) return 'MM';
+				const low = Math.floor(d);
+				const high = Math.ceil(d);
+				if (low === high) {
+					return cupOrder[Math.min(high, 20)];
+				}
+				// fraction between two integers
+				const left = cupOrder[Math.max(low, 1)];
+				const right = cupOrder[Math.min(high, 20)];
+				// Handle low==0 separately (<1") → AA/A
+				if (low === 0) return `AA/A`;
+				return `${left}/${right}`;
+			}
+
+			function shiftCup(label, steps) {
+				// steps can be 0.5 increments; label may be single (e.g., 'FF') or range 'FF/G'
+				const shiftSingle = (c, s) => {
+					const i = cupOrder.indexOf(c);
+					if (i < 0) return c;
+					const whole = Math.trunc(s);
+					const frac = s - whole; // 0 or 0.5 or -0.5, etc.
+					let idx = i + whole;
+					idx = Math.max(0, Math.min(idx, cupOrder.length - 1));
+					if (Math.abs(frac) < 0.25) return cupOrder[idx];
+					// half-step → between sizes depending on direction
+					if (frac > 0) {
+						const r = Math.min(idx + 1, cupOrder.length - 1);
+						return `${cupOrder[idx]}/${cupOrder[r]}`;
+					} else {
+						const l = Math.max(idx - 1, 0);
+						return `${cupOrder[l]}/${cupOrder[idx]}`;
+					}
+				};
+
+				if (label.includes('/')) {
+					const [l, r] = label.split('/');
+					const left = shiftSingle(l, steps);
+					const right = shiftSingle(r, steps);
+					// If both collapse to same single label, dedupe; otherwise, try to merge ranges nicely
+					const uniq = new Set([left, right]);
+					if (uniq.size === 1) return [...uniq][0];
+					// If both are single labels and adjacent, render as L/R again
+					if (![...uniq].some(x => x.includes('/'))) {
+						const arr = [...uniq].map(x => cupOrder.indexOf(x)).sort((a, b) => a - b);
+						if (arr[1] - arr[0] === 1) {
+							return `${cupOrder[arr[0]]}/${cupOrder[arr[1]]}`;
+						}
+					}
+					return `${left} or ${right}`;
+				}
+				return shiftSingle(label, steps);
+			}
+
+			function parseSAB() {
+				const sab = document.querySelector('input[name="sab"]:checked');
+				return sab ? sab.value : 'afab';
+			}
+
+			function calc() {
+				const vals = [els.m1, els.m2, els.m3, els.m4, els.m5, els.m6].map(val);
+				if (vals.some(v => !isFinite(v))) {
+					show(`<div class="badge warn">Please fill all six measurements.</div>`);
+					return;
+				}
+				// Convert to inches if needed
+				const [loose, snug, tight, stand, lean, lie] = [vals[0], vals[1], vals[2], vals[3], vals[4], vals[5]].map(toInches);
+
+				// Step 7: band size = nearest even of snug
+				const band = roundNearestEven(snug);
+
+				// Step 8: choose bust baseline and compute diff
+				const sab = parseSAB();
+				let chosenBust;
+				if (sab === 'afab') {
+					const gap = Math.abs(lean - stand);
+					if (gap > 2.5) {
+						chosenBust = (stand + lean + lie) / 3; // average of three
+					} else {
+						chosenBust = lean; // use leaning
+					}
+				} else { // AMAB weighted average
+					chosenBust = (stand + lean + lie + stand + lie) / 5;
+				}
+				const rawDiff = chosenBust - loose; // can be fractional
+				const initialCup = diffToCupLabel(rawDiff);
+
+				// Step 9: adjust final cup by x
+				const x = Math.round(Math.abs(loose - band)) / 2; // x can be 0, 0.5, 1, 1.5, ...
+				let finalCup;
+				if (loose < band) {
+					finalCup = shiftCup(initialCup, -x); // decrease
+				} else if (loose > band) {
+					finalCup = shiftCup(initialCup, x); // increase
+				} else {
+					finalCup = initialCup;
+				}
+
+				// Advisory about band up/down based on snug vs tight
+				const snugTightGap = Math.abs(snug - tight);
+				let bandNote = '';
+				if (snugTightGap < 2) { bandNote = 'You may prefer sizing <em>up</em> a band for comfort.'; }
+				else if (snugTightGap >= 4) { bandNote = 'You may consider sizing <em>down</em> a band since your tight measure is much smaller.'; }
+
+				// Capping note if diff exceeds chart
+				const capNote = (rawDiff >= 20) ? '<div class="tips">Your cup difference exceeds the chart upper bound (20\"). Shown as MM; consider specialist brands.</div>' : '';
+
+				const initialBustUsed = sab === 'afab' ? (Math.abs(lean - stand) > 2.5 ? 'average of standing, leaning, lying' : 'leaning') : 'weighted average of standing+leaning+lying with extra weight on standing & lying';
+
+				const details = `
+          <div class="badge"><span>Band size:</span> <strong>${band}</strong></div>
+          <div class="badge"><span>Initial cup (Step 8):</span> <strong>${initialCup ?? '–'}</strong> <span class="muted">(using ${initialBustUsed})</span></div>
+          <div class="badge"><span>x (Step 9):</span> <strong>${x.toFixed(1)}</strong> <span class="muted">from |loose − band|</span></div>
+          ${capNote}
+        `;
+
+				const final = `<div class="final">Final size: <span>${band}${finalCup ? finalCup : ''}</span></div>`;
+
+				const heur = bandNote ? `<div class="help">Band fit note: ${bandNote}</div>` : '';
+
+				show(`${final}${details}${heur}`);
+			}
+
+			function show(html) { els.result.innerHTML = html; }
+
+			els.calcBtn.addEventListener('click', calc);
+			els.resetBtn.addEventListener('click', () => {
+				[els.m1, els.m2, els.m3, els.m4, els.m5, els.m6].forEach(el => el.value = '');
+				show('<div class="badge">Fill the form and hit <strong>Calculate</strong>.</div>');
+			});
+
+			// Keyboard Enter to calculate
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Enter' && (document.activeElement.tagName === 'INPUT')) {
+					e.preventDefault();
+					calc();
+				}
+			});
+		})();
+	</script>
+</body>
+
+</html>
